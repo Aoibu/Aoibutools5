@@ -27,9 +27,10 @@
 }
 body{
   font-family:'Cairo',sans-serif;
-  background:radial-gradient(circle at 10% 20%,rgba(99,102,241,.15),transparent 40%),
-             radial-gradient(circle at 90% 80%,rgba(236,72,153,.15),transparent 40%),
-             var(--bg);
+  background:
+    radial-gradient(circle at 10% 20%,rgba(99,102,241,.15),transparent 40%),
+    radial-gradient(circle at 90% 80%,rgba(236,72,153,.15),transparent 40%),
+    var(--bg);
   color:#fff;
 }
 .glass{
@@ -62,7 +63,7 @@ body{
     أدوات احترافية تعمل داخل المتصفح
   </h2>
   <p class="text-gray-400 max-w-xl mx-auto mb-8">
-    بدون رفع ملفات، بدون انتظار — كل المعالجة تتم على جهازك.
+    بدون رفع ملفات — كل المعالجة تتم على جهازك
   </p>
   <a href="#tools" class="bg-indigo-600 hover:bg-indigo-700 px-8 py-3 rounded-xl font-bold">
     استعرض الأدوات
@@ -73,70 +74,34 @@ body{
 <main id="tools" class="container mx-auto px-4 pb-24">
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-    <!-- Image -->
     <div onclick="openTool('image')" class="glass card p-5 rounded-2xl cursor-pointer transition">
-      <div class="flex items-center gap-4 mb-3">
-        <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-400">
-          <i class="fa-solid fa-image"></i>
-        </div>
-        <h3 class="font-bold">محول الصور</h3>
-      </div>
-      <p class="text-sm text-gray-400">تحويل PNG / JPG / WEBP</p>
+      <h3 class="font-bold mb-1"><i class="fa-solid fa-image ml-2"></i>محول الصور</h3>
+      <p class="text-sm text-gray-400">PNG / JPG / WEBP</p>
     </div>
 
-    <!-- Video -->
     <div onclick="openTool('video')" class="glass card p-5 rounded-2xl cursor-pointer transition">
-      <div class="flex items-center gap-4 mb-3">
-        <div class="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center text-red-400">
-          <i class="fa-solid fa-clapperboard"></i>
-        </div>
-        <h3 class="font-bold">تحويل فيديو</h3>
-      </div>
-      <p class="text-sm text-gray-400">MP4 / WEBM / MKV</p>
+      <h3 class="font-bold mb-1"><i class="fa-solid fa-clapperboard ml-2"></i>تحويل فيديو</h3>
+      <p class="text-sm text-gray-400">MP4 / WEBM</p>
     </div>
 
-    <!-- Audio -->
     <div onclick="openTool('audio')" class="glass card p-5 rounded-2xl cursor-pointer transition">
-      <div class="flex items-center gap-4 mb-3">
-        <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-400">
-          <i class="fa-solid fa-music"></i>
-        </div>
-        <h3 class="font-bold">تحويل صوت</h3>
-      </div>
+      <h3 class="font-bold mb-1"><i class="fa-solid fa-music ml-2"></i>تحويل صوت</h3>
       <p class="text-sm text-gray-400">MP3 / WAV</p>
     </div>
 
-    <!-- Extract -->
     <div onclick="openTool('extract')" class="glass card p-5 rounded-2xl cursor-pointer transition">
-      <div class="flex items-center gap-4 mb-3">
-        <div class="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center text-pink-400">
-          <i class="fa-solid fa-wave-square"></i>
-        </div>
-        <h3 class="font-bold">فصل الصوت</h3>
-      </div>
-      <p class="text-sm text-gray-400">استخراج الصوت من الفيديو</p>
+      <h3 class="font-bold mb-1"><i class="fa-solid fa-wave-square ml-2"></i>فصل الصوت</h3>
+      <p class="text-sm text-gray-400">من الفيديو</p>
     </div>
 
-    <!-- Torrent -->
     <div onclick="openTool('torrent')" class="glass card p-5 rounded-2xl cursor-pointer transition">
-      <div class="flex items-center gap-4 mb-3">
-        <div class="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center text-green-400">
-          <i class="fa-solid fa-magnet"></i>
-        </div>
-        <h3 class="font-bold">تورنت ويب</h3>
-      </div>
-      <p class="text-sm text-gray-400">تشغيل Magnet مباشرة</p>
+      <h3 class="font-bold mb-1"><i class="fa-solid fa-magnet ml-2"></i>تورنت ويب</h3>
+      <p class="text-sm text-gray-400">Magnet مباشر</p>
     </div>
 
-    <!-- QR -->
     <div onclick="openTool('qr')" class="glass card p-5 rounded-2xl cursor-pointer transition">
-      <div class="flex items-center gap-4 mb-3">
-        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
-          <i class="fa-solid fa-qrcode"></i>
-        </div>
-        <h3 class="font-bold">QR Code</h3>
-      </div>
-      <p class="text-sm text-gray-400">تحويل النصوص إلى QR</p>
+      <h3 class="font-bold mb-1"><i class="fa-solid fa-qrcode ml-2"></i>QR Code</h3>
+      <p class="text-sm text-gray-400">نص → QR</p>
     </div>
 
   </div>
@@ -145,119 +110,131 @@ body{
 <!-- WORKSPACE -->
 <div id="workspace" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
   <div class="glass w-full max-w-3xl rounded-2xl p-8 relative">
-    <button onclick="closeWorkspace()" class="absolute left-4 top-4 text-red-400 hover:text-red-500">
+    <button onclick="closeWorkspace()" class="absolute left-4 top-4 text-red-400">
       <i class="fa-solid fa-xmark text-2xl"></i>
     </button>
-    <h2 id="workspace-title" class="text-2xl font-bold mb-6"></h2>
 
-    <!-- Image Tool -->
+    <h2 id="workspaceTitle" class="text-2xl font-bold mb-6"></h2>
+
+    <!-- Image -->
     <div id="tool-image" class="tool hidden text-center">
-      <input type="file" id="img-input" accept="image/*" class="mb-4">
-      <select id="img-format" class="bg-gray-800 p-2 rounded mb-4">
+      <input type="file" id="imgInput" accept="image/*" class="mb-4">
+      <select id="imgFormat" class="bg-gray-800 p-2 rounded mb-4">
         <option value="image/png">PNG</option>
         <option value="image/jpeg">JPG</option>
         <option value="image/webp">WEBP</option>
-      </select>
-      <br>
+      </select><br>
       <button onclick="convertImage()" class="bg-green-600 px-6 py-2 rounded font-bold">تحويل</button>
-      <a id="img-download" class="block mt-4 text-blue-400 hidden">تحميل</a>
+      <a id="imgDownload" class="block mt-4 text-blue-400 hidden">تحميل</a>
     </div>
 
     <!-- QR -->
     <div id="tool-qr" class="tool hidden text-center">
-      <input id="qr-input" class="w-full bg-gray-800 p-3 rounded mb-4" placeholder="اكتب النص">
+      <input id="qrInput" class="w-full bg-gray-800 p-3 rounded mb-4" placeholder="اكتب النص">
       <button onclick="generateQR()" class="bg-white text-black px-6 py-2 rounded font-bold">إنشاء</button>
       <div id="qrcode" class="mt-4 flex justify-center"></div>
     </div>
 
     <!-- Torrent -->
     <div id="tool-torrent" class="tool hidden text-center">
-      <input id="torrent-input" class="w-full bg-gray-800 p-3 rounded mb-4" placeholder="Magnet link">
+      <input id="torrentInput" class="w-full bg-gray-800 p-3 rounded mb-4" placeholder="Magnet link">
       <button onclick="startTorrent()" class="bg-green-600 px-6 py-2 rounded font-bold">بدء</button>
-      <div id="torrent-files" class="mt-4 text-sm"></div>
+      <div id="torrentFiles" class="mt-4 text-sm"></div>
     </div>
 
     <!-- FFmpeg -->
     <div id="tool-ffmpeg" class="tool hidden text-center">
-      <input type="file" id="ffmpeg-file" class="mb-4">
-      <select id="ffmpeg-format" class="bg-gray-800 p-2 rounded mb-4"></select>
-      <br>
+      <input type="file" id="ffmpegFile" class="mb-4">
+      <select id="ffmpegFormat" class="bg-gray-800 p-2 rounded mb-4"></select><br>
       <button onclick="runFFmpeg()" class="bg-red-600 px-6 py-2 rounded font-bold">تحويل</button>
-      <a id="ffmpeg-download" class="block mt-4 text-blue-400 hidden">تحميل</a>
+      <a id="ffmpegDownload" class="block mt-4 text-blue-400 hidden">تحميل</a>
     </div>
 
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer class="text-center text-gray-500 text-sm py-6">
-  © 2026 Aoibu Tools — صُنع بواسطة فريق أويبو 💙
+  © 2026 Aoibu Tools — فريق أويبو 💙
 </footer>
 
 <script>
 const { createFFmpeg, fetchFile } = FFmpeg;
-let ffmpeg=null,currentTool='';
+let ffmpeg = null;
+let currentTool = '';
+
+const workspace = document.getElementById('workspace');
+const titleEl = document.getElementById('workspaceTitle');
 
 function openTool(t){
-  currentTool=t;
+  currentTool = t;
   workspace.classList.remove('hidden');
   document.querySelectorAll('.tool').forEach(e=>e.classList.add('hidden'));
-  const titles={image:'محول الصور',video:'تحويل فيديو',audio:'تحويل صوت',extract:'فصل الصوت',torrent:'تورنت ويب',qr:'QR Code'};
-  workspace-title.innerText=titles[t];
-  if(t==='image')tool-image.classList.remove('hidden');
-  if(t==='qr')tool-qr.classList.remove('hidden');
-  if(t==='torrent')tool-torrent.classList.remove('hidden');
+
+  const titles = {
+    image:'محول الصور',
+    video:'تحويل فيديو',
+    audio:'تحويل صوت',
+    extract:'فصل الصوت',
+    torrent:'تورنت ويب',
+    qr:'QR Code'
+  };
+  titleEl.innerText = titles[t];
+
+  if(t==='image') document.getElementById('tool-image').classList.remove('hidden');
+  if(t==='qr') document.getElementById('tool-qr').classList.remove('hidden');
+  if(t==='torrent') document.getElementById('tool-torrent').classList.remove('hidden');
+
   if(['video','audio','extract'].includes(t)){
-    tool-ffmpeg.classList.remove('hidden');
+    document.getElementById('tool-ffmpeg').classList.remove('hidden');
     setupFFmpeg();
   }
 }
-function closeWorkspace(){workspace.classList.add('hidden');}
+function closeWorkspace(){ workspace.classList.add('hidden'); }
 
 function convertImage(){
-  const f=img-input.files[0];
-  if(!f)return;
-  const r=new FileReader();
-  r.onload=e=>{
-    const i=new Image();
-    i.onload=()=>{
+  const f = imgInput.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = e=>{
+    const i = new Image();
+    i.onload = ()=>{
       const c=document.createElement('canvas');
-      c.width=i.width;c.height=i.height;
+      c.width=i.width; c.height=i.height;
       c.getContext('2d').drawImage(i,0,0);
-      img-download.href=c.toDataURL(img-format.value);
-      img-download.download='converted';
-      img-download.classList.remove('hidden');
-    }
-    i.src=e.target.result;
-  }
+      imgDownload.href = c.toDataURL(imgFormat.value);
+      imgDownload.download = 'converted';
+      imgDownload.classList.remove('hidden');
+    };
+    i.src = e.target.result;
+  };
   r.readAsDataURL(f);
 }
 
 function generateQR(){
   qrcode.innerHTML='';
-  new QRCode(qrcode,{text:qr-input.value,width:150,height:150});
+  new QRCode(qrcode,{text:qrInput.value,width:160,height:160});
 }
 
 async function setupFFmpeg(){
   if(!ffmpeg){
-    ffmpeg=createFFmpeg({log:false});
+    ffmpeg = createFFmpeg({log:false});
     await ffmpeg.load();
   }
-  ffmpeg-format.innerHTML='';
-  if(currentTool==='video')ffmpeg-format.innerHTML='<option>mp4</option><option>webm</option>';
-  if(currentTool==='audio')ffmpeg-format.innerHTML='<option>mp3</option><option>wav</option>';
-  if(currentTool==='extract')ffmpeg-format.innerHTML='<option>mp3</option>';
+  ffmpegFormat.innerHTML='';
+  if(currentTool==='video') ffmpegFormat.innerHTML='<option>mp4</option><option>webm</option>';
+  if(currentTool==='audio') ffmpegFormat.innerHTML='<option>mp3</option><option>wav</option>';
+  if(currentTool==='extract') ffmpegFormat.innerHTML='<option>mp3</option>';
 }
 
 async function runFFmpeg(){
-  const f=ffmpeg-file.files[0];
-  if(!f)return;
+  const f = ffmpegFile.files[0];
+  if(!f) return;
   ffmpeg.FS('writeFile','i',await fetchFile(f));
-  await ffmpeg.run('-i','i','o.'+ffmpeg-format.value);
-  const d=ffmpeg.FS('readFile','o.'+ffmpeg-format.value);
-  ffmpeg-download.href=URL.createObjectURL(new Blob([d.buffer]));
-  ffmpeg-download.download='output';
-  ffmpeg-download.classList.remove('hidden');
+  await ffmpeg.run('-i','i','o.'+ffmpegFormat.value);
+  const d = ffmpeg.FS('readFile','o.'+ffmpegFormat.value);
+  ffmpegDownload.href = URL.createObjectURL(new Blob([d.buffer]));
+  ffmpegDownload.download = 'output';
+  ffmpegDownload.classList.remove('hidden');
 }
 </script>
 
