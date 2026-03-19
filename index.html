@@ -37,9 +37,20 @@
             font-family: sans-serif;
             box-sizing: border-box;
         }
-        input:focus { outline: none; border-color: #00bcd4; }
+        input:focus, textarea:focus { outline: none; border-color: #00bcd4; }
         
-        /* زر الرفع */
+        .desc-input {
+            width: 100%;
+            height: 100px;
+            background: #0a0b10;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'El Messiri', sans-serif;
+            resize: vertical;
+        }
+
         .file-upload-wrapper {
             position: relative;
             border: 2px dashed #444;
@@ -68,7 +79,7 @@
         button:hover { background: #008ba3; }
         button:disabled { background: #555; cursor: not-allowed; }
 
-        textarea {
+        #outputCode {
             width: 100%;
             height: 300px;
             background: #050505;
@@ -111,6 +122,11 @@
     </div>
 
     <div class="form-group">
+        <label>قصة / وصف الحلقة:</label>
+        <textarea id="epDesc" class="desc-input" placeholder="اكتب هنا قصة الحلقة أو وصفها المختصر..."></textarea>
+    </div>
+
+    <div class="form-group">
         <label>البوستر (ارفع الصورة وسيتولى الموقع استضافتها):</label>
         <div class="file-upload-wrapper" onclick="document.getElementById('posterFile').click()">
             <span id="uploadText">📂 اضغط لاختيار صورة البوستر</span>
@@ -132,6 +148,11 @@
     </div>
 
     <div class="form-group">
+        <label>رابط TokyoInsider (اختياري للمشاهدة والتحميل):</label>
+        <input type="text" id="tokyoLink" placeholder="رابط المشاهدة المباشر MP4">
+    </div>
+
+    <div class="form-group">
         <label>روابط إضافية (اختياري):</label>
         <input type="text" id="rawLink" placeholder="رابط الخام (MP4)" style="margin-bottom: 5px;">
         <input type="text" id="subLink" placeholder="رابط ملف الترجمة (ASS)">
@@ -144,7 +165,6 @@
 </div>
 
 <script>
-    // مفتاح API مجاني من ImgBB
     const IMGBB_API_KEY = "1a3381c886abff3277bc11ab4fbefedf"; 
 
     function handleImageUpload(input) {
@@ -154,7 +174,6 @@
             const preview = document.getElementById('imgPreview');
             const genBtn = document.getElementById('generateBtn');
 
-            // معاينة
             const reader = new FileReader();
             reader.onload = function(e) {
                 preview.src = e.target.result;
@@ -162,7 +181,6 @@
             }
             reader.readAsDataURL(file);
 
-            // بدء الرفع
             statusDiv.innerText = "جاري رفع الصورة للسيرفر وتوليد رابط دائم... ⏳";
             statusDiv.style.color = "#ff9800";
             genBtn.disabled = true; 
@@ -197,36 +215,35 @@
     }
 
     function generateHTML() {
-        // 1. جلب البيانات
         let ep = document.getElementById('epNum').value.trim();
         let title = document.getElementById('epTitle').value.trim();
+        let desc = document.getElementById('epDesc').value.trim();
         let poster = document.getElementById('finalPosterUrl').value.trim();
         let epType = document.getElementById('epType').value;
         
         let driveInput = document.getElementById('driveLink').value.trim();
         let megaInput = document.getElementById('megaLink').value.trim();
+        let tokyoInput = document.getElementById('tokyoLink').value.trim();
         let rawLink = document.getElementById('rawLink').value.trim();
         let subLink = document.getElementById('subLink').value.trim();
 
         if (!ep) ep = "{EP}"; 
+        if (!desc) desc = "لا يوجد وصف متاح لهذه الحلقة حالياً.";
 
-        // التحقق من وجود بوستر
         if (!poster) {
             alert("⚠️ المرجو رفع صورة البوستر أولاً أو الانتظار حتى يكتمل الرفع.");
             return;
         }
 
-        // تحديد الشارة (Badge) بناء على الاختيار
         let badgeHTML = "";
         if(epType === "filler") {
             badgeHTML = `<span class="badge filler">فلر</span>`;
         } else if (epType === "manga") {
             badgeHTML = `<span class="badge manga">مانجا</span>`;
         } else if (epType === "remaster") {
-            badgeHTML = `<span class="badge filler">Remaster</span>`; // نفس ستايل الفلر
+            badgeHTML = `<span class="badge filler">Remaster</span>`; 
         }
 
-        // 2. معالجة رابط Drive
         let driveEmbed = "";
         let driveDL = "";
         let driveIdMatch = driveInput.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -239,7 +256,6 @@
             driveDL = driveInput || "#";
         }
 
-        // 3. معالجة رابط Mega
         let megaEmbed = "";
         let megaDL = "";
         if (megaInput.includes("mega.nz/file/")) {
@@ -253,8 +269,14 @@
             megaDL = megaInput || "#";
         }
 
-        // 4. القالب الجديد (تم دمج الكود الذي طلبته هنا)
-        // ملاحظة: علامة \ قبل الرموز هي لطباعتها كما هي داخل الكود المولد
+        // معالجة رابط سيرفر طوكيو (زر المشاهدة + صف التحميل)
+        let tokyoBtnHTML = "";
+        let tokyoDLRow = "";
+        if (tokyoInput !== "") {
+            tokyoBtnHTML = `<button class="neon-btn" onclick="changeServer('${tokyoInput}', this)">TokyoInsider</button>`;
+            tokyoDLRow = `<tr><td>TokyoInsider</td><td>1080p FHD</td><td><a href="${tokyoInput}" class="dl-link" target="_blank" download>تحميل</a></td></tr>`;
+        }
+
         let template = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -300,7 +322,6 @@
       user-select: none;
     }
 
-    /* --- Preloader --- */
     #preloader {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: #000; z-index: 9999;
@@ -326,7 +347,6 @@
     }
     body.loaded #preloader { opacity: 0; visibility: hidden; }
 
-    /* --- Background Effects --- */
     #particles-container {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         overflow: hidden; z-index: -1; pointer-events: none;
@@ -351,7 +371,6 @@
     }
     @keyframes fogMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-    /* --- Header --- */
     header {
       background: rgba(20, 20, 30, 0.6);
       backdrop-filter: blur(15px);
@@ -363,7 +382,6 @@
     }
     .home-link { color: #fff; text-decoration: none; font-weight: bold; transition: 0.3s; text-shadow: 0 0 10px var(--primary-color); }
 
-    /* --- Content --- */
     .container { max-width: 900px; margin: 40px auto; padding: 20px; position: relative; }
 
     .glass-card {
@@ -397,7 +415,7 @@
       box-shadow: 0 0 40px rgba(0, 188, 212, 0.15);
       margin-bottom: 25px; background: #000;
     }
-    .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+    .video-wrap iframe, .video-wrap video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; outline: none; }
 
     .neon-btn {
       padding: 10px 30px; border-radius: 50px; border: 1px solid var(--primary-color);
@@ -449,7 +467,6 @@
     }
     .cinema-btn:hover { background: var(--primary-color); color: #000; }
 
-    /* Comments Style */
     .comment-item { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 0; animation: fadeIn 0.5s; }
     .comment-header { display: flex; justify-content: space-between; font-size: 0.85rem; color: #aaa; margin-bottom: 5px; }
     .comment-author { color: var(--primary-color); font-weight: bold; }
@@ -460,18 +477,9 @@
     .comment-input, .comment-textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-family: inherit; }
     #reply-status { display: none; justify-content: space-between; background: rgba(0,188,212,0.1); padding: 10px; margin-bottom: 10px; border-radius: 5px; border-right: 3px solid var(--primary-color); }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* تنسيق خاص لزر الإبلاغ باللون الأحمر */
-    .report-btn {
-        border-color: #ff3d3d;
-        color: #ff3d3d;
-        background: rgba(255, 61, 61, 0.1);
-    }
-
-    .report-btn:hover {
-        background: #ff3d3d;
-        color: #fff;
-        box-shadow: 0 0 20px #ff3d3d;
-    }
+    
+    .report-btn { border-color: #ff3d3d; color: #ff3d3d; background: rgba(255, 61, 61, 0.1); }
+    .report-btn:hover { background: #ff3d3d; color: #fff; box-shadow: 0 0 20px #ff3d3d; }
     
     .badge { padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; margin-right: 10px; display: inline-block; vertical-align: middle; }
     .manga { background: rgba(255, 0, 0, 0.2); color: #ff5555; border: 1px solid #ff5555; }
@@ -538,13 +546,14 @@
       <button class="neon-btn" onclick="changeServer('${megaEmbed}', this)">
         Mega 1080p
       </button>
-    </div>
+      ${tokyoBtnHTML} </div>
 
     <div style="overflow-x: auto;">
         <table class="dl-table">
             <tr><th>السيرفر</th><th>الجودة</th><th>التحميل</th></tr>
             <tr><td>Mega</td><td>1080p FHD</td><td><a href="${megaDL}" class="dl-link">تحميل</a></td></tr>
             <tr><td>Drive</td><td>1080p FHD</td><td><a href="${driveDL}" class="dl-link">تحميل</a></td></tr>
+            ${tokyoDLRow}
         </table>
     </div>
   </div>
@@ -569,8 +578,7 @@
   <div class="glass-card">
     <h3 style="color: var(--primary-color); margin-top: 0;">⚡ قصة الحلقة</h3>
     <p style="line-height: 1.8; color: #ddd;">
-      ${title}
-    </p>
+      ${desc} </p>
   </div>
 
     <div class="glass-card">
@@ -604,7 +612,6 @@ function reportIssue() {
     </div>
   </div>
 
-
   <div class="glass-card" style="text-align: center;">
     <h3 style="color: var(--primary-color);">⭐ قيّم الحلقة</h3>
     <div class="stars" id="rating-stars">
@@ -612,7 +619,6 @@ function reportIssue() {
     </div>
     <p id="rating-msg" style="color: var(--primary-color); height: 20px; margin-top: 10px;"></p>
   </div>
-
 
 <div class="glass-card">
     <h3 style="color: var(--primary-color); margin-top: 0;">💬 التعليقات</h3>
@@ -642,21 +648,13 @@ function reportIssue() {
 </footer>
 
 <script>
-  // ==========================================
-  // 1. Core Logic & Preloader
-  // ==========================================
-  
-  // Extract Episode Number
   const navPath = window.location.pathname;
   const navFileName = navPath.substring(navPath.lastIndexOf('/') + 1);
   const epMatch = navFileName.match(/(\\d+)/);
   const currentEp = epMatch ? epMatch[0] : "${ep}"; 
 
-  // Update Page Title and Metadata (Dynamic)
-  // This ensures that if the file is renamed, the data updates where possible
   document.title = document.title.replace(/{EP}/g, currentEp);
   
-  // Hide Loader Logic
   function hideLoader() {
       document.body.classList.add('loaded');
   }
@@ -664,9 +662,6 @@ function reportIssue() {
   window.addEventListener('load', () => setTimeout(hideLoader, 500));
   setTimeout(hideLoader, 3000); 
 
-  // ==========================================
-  // 2. Visual Effects (Particles)
-  // ==========================================
   const particleContainer = document.getElementById('particles-container');
   if (particleContainer) {
       for (let i = 0; i < 35; i++) {
@@ -684,7 +679,6 @@ function reportIssue() {
       }
   }
 
-  // Scroll Animations
   const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
           if(entry.isIntersecting) entry.target.classList.add('visible');
@@ -692,11 +686,14 @@ function reportIssue() {
   }, { threshold: 0.1 });
   document.querySelectorAll('.glass-card').forEach(el => observer.observe(el));
 
-  // ==========================================
-  // 3. Navigation & Player
-  // ==========================================
+  // تم تحديث الدالة لتدعم الروابط المباشرة للفيديو (mp4)
   function changeServer(url, btn) {
-      document.getElementById('videoFrame').src = url;
+      const videoWrap = document.querySelector('.video-wrap');
+      if(url.includes('.mp4')) {
+          videoWrap.innerHTML = '<video controls autoplay src="' + url + '"></video>';
+      } else {
+          videoWrap.innerHTML = '<iframe id="videoFrame" src="' + url + '" allowfullscreen></iframe>';
+      }
       document.querySelectorAll('.neon-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
   }
@@ -708,7 +705,6 @@ function reportIssue() {
       .catch(() => prompt("انسخ الرابط يدوياً:", url));
   }
 
-  // Next/Prev Buttons Logic
   const prevBtn = document.getElementById("prevEpisode");
   const nextBtn = document.getElementById("nextEpisode");
   const epNumInt = parseInt(currentEp);
@@ -723,9 +719,6 @@ function reportIssue() {
       nextBtn.setAttribute("href", \`\${epNumInt + 1}.html\`);
   }
 
-  // ==========================================
-  // 4. Rating System
-  // ==========================================
   const RATING_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzK1u56o3Vz2qiNIEio_NMZKThCkckFCUOG2fi0HZCXn2pDGjxmcy6mxXP3hsZ7HkjWA/exec"; 
 
   function rate(n) {
@@ -752,9 +745,6 @@ function reportIssue() {
       });
   }
 
-  // ==========================================
-  // 5. Comments System
-  // ==========================================
   const COMMENTS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzV7dMLHD51j_DOypZXcrhSBR2YVVruMjsAHfKxCL0CqSf7zRLiWC6ofLpu6KHfoA_/exec"; 
   let parentId = "";
 
@@ -887,15 +877,11 @@ function reportIssue() {
       return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  // ==========================================
-  // 6. Security & Schema
-  // ==========================================
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
       if ((e.ctrlKey && ['c','u','s'].includes(e.key.toLowerCase())) || e.key === 'F12') e.preventDefault();
   });
 
-  // Schema Markup for SEO
   const schemaData = {
       "@context": "https://schema.org",
       "@type": "VideoObject",
