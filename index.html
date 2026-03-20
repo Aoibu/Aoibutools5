@@ -160,7 +160,7 @@
 
     <button id="generateBtn" onclick="generateHTML()">⚡ توليد الكود الجديد</button>
 
-    <textarea id="outputCode" placeholder="سيظهر الكود هنا..."></textarea>
+    <textarea id="outputCode" placeholder="سيظهر الكود هنا..." readonly></textarea>
     <button onclick="copyCode()" style="background: #333; color: #fff; margin-top: 10px;">📋 نسخ الكود</button>
 </div>
 
@@ -277,6 +277,7 @@
             tokyoDLRow = `<tr><td>TokyoInsider</td><td>1080p FHD</td><td><a href="${tokyoInput}" class="dl-link" target="_blank" download>تحميل</a></td></tr>`;
         }
 
+        // تم إصلاح أخطاء الـ HTML المولد وإغلاق المتغير بشكل صحيح
         let template = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -300,11 +301,7 @@
     <meta property="og:image" content="${poster}" />
     <meta property="og:title" content="المحقق كونان الحلقة ${ep} : ${title}" />
 
-    
     <link rel="stylesheet" href="style2.css">
-    
-</head>
-
 </head>
 
 <body>
@@ -357,7 +354,8 @@
       <button class="neon-btn" onclick="changeServer('${megaEmbed}', this)">
         Mega 1080p
       </button>
-      ${tokyoBtnHTML} </div>
+      ${tokyoBtnHTML}
+    </div>
 
     <div style="overflow-x: auto;">
         <table class="dl-table">
@@ -389,10 +387,11 @@
   <div class="glass-card">
     <h3 style="color: var(--primary-color); margin-top: 0;">⚡ قصة الحلقة</h3>
     <p style="line-height: 1.8; color: #ddd;">
-      ${desc} </p>
+      ${desc}
+    </p>
   </div>
 
-    <div class="glass-card">
+  <div class="glass-card">
     <h3 style="color: var(--primary-color); margin-top: 0; display: flex; align-items: center; gap: 10px;">
         <span>✒️</span> طاقم العمل
     </h3>
@@ -410,8 +409,30 @@
         <button onclick="reportIssue()" class="neon-btn report-btn">
             <span>⚠️</span> إبلاغ عن مشكلة
         </button>
+    </div> </div> </div> <script src="script2.js"><\/script>
 
-          <script src="script2.js"></script>
+</body>
+</html>`;
 
+        // وضع النص المولد في المربع
+        document.getElementById('outputCode').value = template;
+    }
+
+    // دالة النسخ التي كانت مفقودة
+    function copyCode() {
+        let copyText = document.getElementById("outputCode");
+        if(copyText.value === "") {
+            alert("⚠️ لا يوجد كود لنسخه! يرجى توليد الكود أولاً.");
+            return;
+        }
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // للهواتف المحمولة
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            alert("✅ تم نسخ الكود بنجاح!");
+        }).catch(err => {
+            alert("حدث خطأ أثناء النسخ: " + err);
+        });
+    }
+</script>
 </body>
 </html>
